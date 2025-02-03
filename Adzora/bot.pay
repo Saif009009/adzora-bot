@@ -1,0 +1,36 @@
+import logging
+import asyncio
+import os
+from aiogram import Bot, Dispatcher, types
+from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
+from config import TOKEN
+
+# Enable logging
+logging.basicConfig(level=logging.INFO)
+
+# Initialize bot and dispatcher
+bot = Bot(token=TOKEN)
+dp = Dispatcher()
+
+# Keyboard buttons
+kb = ReplyKeyboardMarkup(resize_keyboard=True)
+kb.add(KeyboardButton("🔗 Visit Sites"), KeyboardButton("📢 Join Channels"))
+kb.add(KeyboardButton("🤖 Join Bots"), KeyboardButton("ℹ️ More"))
+
+@dp.message_handler(commands=['start'])
+async def start_command(message: types.Message):
+    await message.answer("👋 Welcome to the Micro Job Bot!", reply_markup=kb)
+
+@dp.message_handler(lambda message: message.text == "🔗 Visit Sites")
+async def visit_sites(message: types.Message):
+    await message.answer("✅ Click this link to earn: https://example.com")
+
+@dp.message_handler(lambda message: message.text == "📢 Join Channels")
+async def join_channels(message: types.Message):
+    await message.answer("📢 Join this channel to earn: https://t.me/examplechannel")
+
+async def main():
+    await dp.start_polling(bot)
+
+if __name__ == "__main__":
+    asyncio.run(main())
